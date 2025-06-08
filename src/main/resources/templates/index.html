@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:insert="~{common :: commonHead}">
   <title>Product Manager</title>
@@ -9,7 +10,11 @@
 <body>
 <div class="container">
   <h1 class="mt-5">Product List</h1>
-  <a class="btn btn-primary mb-3" th:href="@{/products/new}">Create New Product</a>
+  <a class="btn btn-primary mb-3"
+     th:href="@{/products/new}"
+     sec:authorize="hasRole('ADMIN')">
+    Create New Product
+  </a>
 
   <table class="table table-bordered">
     <thead>
@@ -30,8 +35,16 @@
       <td th:text="${product.madeIn}">Made in</td>
       <td th:text="${product.price}">Price</td>
       <td>
-        <a class="btn btn-primary btn-sm" th:href="@{'/products/edit/' + ${product.id}}">Edit</a>
-        <a class="btn btn-danger btn-sm" th:href="@{'/products/delete/' + ${product.id}}">Delete</a>
+        <a th:href="@{'/products/edit/' + ${product.id}}"
+           sec:authorize="hasRole('ADMIN')">
+          Edit
+        </a>
+        |
+        <a th:href="@{'/products/delete/' + ${product.id}}"
+           sec:authorize="hasRole('ADMIN')"
+           onclick="return confirm('정말 삭제하시겠습니까?');">
+          Delete
+        </a>
       </td>
     </tr>
     </tbody>
